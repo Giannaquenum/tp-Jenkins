@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "mon-tp-python"
+        DOCKER_IMAGE = 'mon-tp-python'
     }
 
     stages {
+
         stage('Test Docker') {
             steps {
                 sh 'which docker'
@@ -22,8 +23,9 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                sh "docker run --rm -v \"$PWD\":/app -w /app ${DOCKER_IMAGE} python app.py"
+                sh "docker run --rm -v ${env.WORKSPACE}:/app -w /app ${DOCKER_IMAGE} python app.py"
             }
         }
+
     }
 }
