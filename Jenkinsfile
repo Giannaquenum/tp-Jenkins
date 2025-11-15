@@ -14,9 +14,15 @@ pipeline {
         }
         stage('Run Python Script') {
             steps {
-                sh 'python app.py'
+                echo 'Lancement de Flask en arrière-plan...'
+                sh 'python app.py & sleep 5'
+                echo 'Flask a démarré temporairement pour le test.'
             }
         }
     }
+    post {
+        always {
+            echo 'Pipeline terminé !'
+        }
+    }
 }
-
