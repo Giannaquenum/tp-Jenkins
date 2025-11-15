@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.14-alpine'
+            image 'mon-tp-python'
             args '-u root:root'
         }
     }
