@@ -1,28 +1,29 @@
 pipeline {
-    agent {
-        docker {
-            image 'mon-tp-python'
-            args '-u root:root'
-        }
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "mon-tp-python"
     }
+
     stages {
         stage('Test Docker') {
             steps {
-                sh 'python --version'
+                sh 'which docker'
+                sh 'docker --version'
                 sh 'echo "Salut Gianna ! Docker fonctionne !"'
             }
         }
-        stage('Run Python Script') {
+
+        stage('Build Docker Image') {
             steps {
-                echo 'Lancement de Flask en arrière-plan...'
-                sh 'python app.py & sleep 5'
-                echo 'Flask a démarré temporairement pour le test.'
+                sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
-    }
-    post {
-        always {
-            echo 'Pipeline terminé !'
+
+        stage('Run Python Script') {
+            steps {
+                sh "docker run --rm -v \"$PWD\":/app -w /app ${DOCKER_IMAGE} python app.py"
+            }
         }
     }
 }
