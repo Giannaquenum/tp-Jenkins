@@ -12,5 +12,11 @@ pipeline {
                 sh 'echo "Salut Gianna ! Docker fonctionne !"'
             }
         }
+        stage('Run Python Script') {
+            steps {
+                sh 'python app.py'
+            }
+        }
     }
 }
+
