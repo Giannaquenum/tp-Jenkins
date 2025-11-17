@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = 'mon-tp-python'
-    }
-
     stages {
 
         stage('Test Docker') {
@@ -17,15 +13,21 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE} ."
+                sh 'docker build -t mon-tp-python .'
             }
         }
 
         stage('Run Python Script') {
             steps {
-                sh "docker run --rm -v ${env.WORKSPACE}:/app -w /app ${DOCKER_IMAGE} python app.py"
+                sh """
+                    docker run --rm \
+                        -p 5000:5000 \
+                        -v "$WORKSPACE":/app \
+                        -w /app mon-tp-python \
+                        python app.py
+                """
             }
         }
-
     }
 }
+
